@@ -1,4 +1,4 @@
 framework
 =========
 
-A mish-mash of re-usable classes and functionality
+A mish-mash of re-usable classes and functionality.
