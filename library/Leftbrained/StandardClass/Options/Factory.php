@@ -7,8 +7,9 @@ use Zend\Stdlib\ArrayUtils;
 class Factory
 {
     protected $properties = array(
-        'mixed'         => 'Leftbrained\\StandardClass\\Options\\Property\\MixedOptions',
-        'integer'         => 'Leftbrained\\StandardClass\\Options\\Property\\IntegerOptions',
+        'mixed'            => 'Leftbrained\\StandardClass\\Options\\Property\\MixedOptions',
+        'integer'          => 'Leftbrained\\StandardClass\\Options\\Property\\IntegerOptions',
+        'character_string' => 'Leftbrained\\StandardClass\\Options\\Property\\CharacterStringOptions',
     );
 
     public function getPropertyClass($type)
