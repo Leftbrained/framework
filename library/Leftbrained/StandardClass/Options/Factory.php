@@ -8,6 +8,7 @@ class Factory
 {
     protected $properties = array(
         'mixed'         => 'Leftbrained\\StandardClass\\Options\\Property\\MixedOptions',
+        'integer'         => 'Leftbrained\\StandardClass\\Options\\Property\\IntegerOptions',
     );
 
     public function getPropertyClass($type)
@@ -58,6 +59,10 @@ class Factory
         }
 
         $class = $this->getPropertyClass($type);
+
+        if (null === $class) {
+            throw new Exception\RuntimeException('Undefined property type: "' . $type . '"');
+        }
 
         return new $class($options);
     }

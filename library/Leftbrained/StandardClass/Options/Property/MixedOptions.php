@@ -1,6 +1,6 @@
 <?php
 namespace Leftbrained\StandardClass\Options\Property;
 
-class MixedOptions extends AbstractPropertyOptions
+class MixedOptions extends PropertyOptions
 {
 }

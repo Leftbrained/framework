@@ -8,6 +8,8 @@ abstract class AbstractProperty implements PropertyInterface
     const CAST_TYPE_INTERNAL = 'internal';
     const CAST_TYPE_DEFAULT  = 'default';
 
+    protected static $optionsClass = 'Leftbrained\\StandardClass\\Options\\Property\\AbstractPropertyOptions';
+
     /**
      * The property name (underscored and lower cased).
      * 
@@ -22,24 +24,13 @@ abstract class AbstractProperty implements PropertyInterface
      */
     protected $defaultValue = null;
 
-    public function __construct($options)
+    public function __construct(Options\PropertyOptions $options)
     {
         $this->setOptions($options);
     }
 
-    protected function setOptions($options)
+    protected function setOptions(Options\PropertyOptions $options)
     {
-        if (!$options instanceof Options\AbstractPropertyOptions) {
-            if ($options instanceof Traversable) {
-                $options = ArrayUtils::iteratorToArray($options);
-            }
-            if (!is_array($options)) {
-                throw new Exception\InvalidArgumentException('invalid property options, must be instanceof Traversible, AbstractPropertyOptions, or array');
-            }
-            $options = new Options\AbstractPropertyOptions($options);
-        }
-
-        // initialize options
         $this->name = $options->getName();
         $this->defaultValue = $this->castInternal($options->getDefaultValue());
     }

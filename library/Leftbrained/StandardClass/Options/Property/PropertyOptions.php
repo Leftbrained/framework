@@ -3,7 +3,7 @@ namespace Leftbrained\StandardClass\Options\Property;
 
 use Leftbrained\Stdlib\AbstractOptions;
 
-class AbstractPropertyOptions extends AbstractOptions
+class PropertyOptions extends AbstractOptions
 {
     protected $class = 'Leftbrained\\StandardClass\\Property\\Mixed';
 
