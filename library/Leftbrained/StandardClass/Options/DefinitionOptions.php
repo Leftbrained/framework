@@ -4,6 +4,7 @@ namespace Leftbrained\StandardClass\Options;
 use Leftbrained\Stdlib\AbstractOptions;
 use Leftbrained\StandardClass\Exception;
 use Leftbrained\StandardClass\Options\Property\AbstractPropertyOptions;
+use Leftbrained\StandardClass\Definition;
 
 class DefinitionOptions extends AbstractOptions
 {
@@ -26,6 +27,7 @@ class DefinitionOptions extends AbstractOptions
      * @var AbstractPropertyOptions[]
      */
     protected $properties = array();
+    protected $validators = array();
 
 //     /**
 //      * Whether or not adding undefined properties will be allowed.
@@ -74,6 +76,31 @@ class DefinitionOptions extends AbstractOptions
     {
         $this->class = $class;
         return $this;
+    }
+
+    public function setValidators($validators)
+    {
+        if (!is_array($validators)) {
+            throw new Exception\InvalidArgumentException('validators must be an array');
+        }
+
+        $this->validators = array();
+
+        $pluginManager = Definition::getValidatorPluginManager();
+
+        foreach ($validators as $key => $value) {
+            if (!is_string($key)) {
+                throw new Exception\InvalidArgumentException('validator key must be the validator name');
+            }
+
+            $this->validators[] = $pluginManager->get($key, $value);
+        }
+        return $this;
+    }
+
+    public function getValidators()
+    {
+        return $this->validators;
     }
 
 //     public function getAllowCustomProperties()

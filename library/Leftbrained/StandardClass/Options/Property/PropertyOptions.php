@@ -1,7 +1,10 @@
 <?php
 namespace Leftbrained\StandardClass\Options\Property;
 
+use Leftbrained\StandardClass\Exception;
+use Leftbrained\StandardClass\Definition;
 use Leftbrained\Stdlib\AbstractOptions;
+use Zend\Validator\ValidatorInterface;
 
 class PropertyOptions extends AbstractOptions
 {
@@ -27,6 +30,12 @@ class PropertyOptions extends AbstractOptions
      * @var mixed
      */
     protected $defaultValue = null;
+
+    /**
+     * 
+     * @var ValidatorInterface[]
+     */
+    protected $validators = array();
 
     public function getClass()
     {
@@ -64,5 +73,30 @@ class PropertyOptions extends AbstractOptions
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    public function setValidators($validators)
+    {
+        if (!is_array($validators)) {
+            throw new Exception\InvalidArgumentException('validators must be an array');
+        }
+
+        $this->validators = array();
+
+        $pluginManager = Definition::getValidatorPluginManager();
+
+        foreach ($validators as $key => $value) {
+            if (!is_string($key)) {
+                throw new Exception\InvalidArgumentException('validator key must be the validator name');
+            }
+
+            $this->validators[] = $pluginManager->get($key, $value);
+        }
+        return $this;
+    }
+
+    public function getValidators()
+    {
+        return $this->validators;
     }
 }

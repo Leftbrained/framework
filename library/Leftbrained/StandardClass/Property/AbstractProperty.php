@@ -2,6 +2,7 @@
 namespace Leftbrained\StandardClass\Property;
 
 use Leftbrained\StandardClass\Options\Property as Options;
+use Zend\Validator\ValidatorChain;
 
 abstract class AbstractProperty implements PropertyInterface
 {
@@ -31,6 +32,12 @@ abstract class AbstractProperty implements PropertyInterface
      */
     protected $defaultValue;
 
+    /**
+     * 
+     * @var ValidatorInterface
+     */
+    protected $validator;
+
     public function __construct(Options\PropertyOptions $options)
     {
         $this->setOptions($options);
@@ -41,6 +48,23 @@ abstract class AbstractProperty implements PropertyInterface
         $this->name = $options->getName();
         $this->required = $options->getRequired();
         $this->defaultValue = $this->castInternal($options->getDefaultValue());
+
+        $validators = $options->getValidators();
+
+        switch (count($validators)) {
+            case 0:
+                $this->validator = null;
+                break;
+            case 1:
+                $this->validator = $validators[0];
+                break;
+            default: // count($validators) > 1
+                $this->validator = new ValidatorChain();
+                foreach ($validators as $validator) {
+                    $this->validator->addValidator($validator);
+                }
+                break;
+        }
     }
 
     public function getName()
@@ -56,6 +80,11 @@ abstract class AbstractProperty implements PropertyInterface
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    public function getValidator()
+    {
+        return $this->validator;
     }
 
     /*
