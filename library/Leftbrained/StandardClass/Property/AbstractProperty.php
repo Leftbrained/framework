@@ -18,11 +18,18 @@ abstract class AbstractProperty implements PropertyInterface
     protected $name;
 
     /**
+     * 
+     * 
+     * @var boolean
+     */
+    protected $required;
+
+    /**
      * The default value for this property.
      * 
      * @var mixed
      */
-    protected $defaultValue = null;
+    protected $defaultValue;
 
     public function __construct(Options\PropertyOptions $options)
     {
@@ -32,12 +39,18 @@ abstract class AbstractProperty implements PropertyInterface
     protected function setOptions(Options\PropertyOptions $options)
     {
         $this->name = $options->getName();
+        $this->required = $options->getRequired();
         $this->defaultValue = $this->castInternal($options->getDefaultValue());
     }
 
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getRequired()
+    {
+        return $this->required;
     }
 
     public function getDefaultValue()

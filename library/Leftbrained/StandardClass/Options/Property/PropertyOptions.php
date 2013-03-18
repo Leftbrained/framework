@@ -15,6 +15,13 @@ class PropertyOptions extends AbstractOptions
     protected $name;
 
     /**
+     * 
+     * 
+     * @var boolean
+     */
+    protected $required = false;
+
+    /**
      * The default value for this property.
      *
      * @var mixed
@@ -35,6 +42,17 @@ class PropertyOptions extends AbstractOptions
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getRequired()
+    {
+        return $this->required;
+    }
+
+    public function setRequired($required)
+    {
+        $this->required = (boolean) $required;
+        return $this;
     }
 
     public function setDefaultValue($defaultValue)
