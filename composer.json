@@ -1,6 +1,6 @@
 {
     "name": "leftbrained/framework",
-    "description: "A mish-mash of re-usable classes and functionality.",
+    "description": "A mish-mash of re-usable classes and functionality.",
     "license": "BSD-3-Clause",
     "require": {
         "zendframework/zend-stdlib": "2.1.*",
