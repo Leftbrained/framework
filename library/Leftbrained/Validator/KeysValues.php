@@ -3,42 +3,37 @@ namespace Leftbrained\Validator;
 
 use Zend\Validator\ValidatorInterface;
 
-class Individual implements ValidatorMultiInterface
+class KeysValues extends AbstractValidatorMulti
 {
-    protected $properties = array();
-    protected $messages;
+    protected $keysValues = array();
 
     public function attach($name, ValidatorInterface $validator)
     {
-        if (!isset($this->properties[$name])) {
-            $this->properties[$name] = array();
+        if (!isset($this->keysValues[$name])) {
+            $this->keysValues[$name] = array();
         }
-        $this->properties[$name][] = $validator;
+        $this->keysValues[$name][] = $validator;
         return $this;
     }
 
     public function isValid($values)
     {
+        $this->setValue($values);
         $result = true;
         $messages = array();
-        foreach ($this->properties as $name => $validators) {
+        foreach ($this->keysValues as $name => $validators) {
             if (!isset($values[$name])) {
                 continue;
             }
             foreach ($validators as $validator) {
                 if (!$validator->isValid($values[$name])) {
                     $result = false;
-                    $this->messages[$name] = $validator->getMessages();
+                    $messages[$name] = $validator->getMessages();
                 }
             }
         }
 
-        $this->messages = $messages;
+        $this->abstractOptions['messages'] = $messages;
         return $result;
-    }
-
-    public function getMessages()
-    {
-        return $this->messages;
     }
 }

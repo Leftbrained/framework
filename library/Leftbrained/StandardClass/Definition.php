@@ -68,7 +68,7 @@ class Definition implements DefinitionInterface
             $validator = $property->getValidator();
             if (null !== $validator) {
                 if (null === $properties) {
-                    $properties = new Validator\Individual();
+                    $properties = new Validator\KeysValues();
                 }
                 $properties->attach($name, $validator);
             }

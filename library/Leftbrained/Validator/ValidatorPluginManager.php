@@ -9,7 +9,7 @@ class ValidatorPluginManager extends BaseManager
     public function __construct(ConfigInterface $configuration = null)
     {
         parent::__construct($configuration);
-        $this->invokableClasses['individual'] = 'Leftbrained\\Validator\\Individual';
+        $this->invokableClasses['keysvalues'] = 'Leftbrained\\Validator\\KeysValues';
         //$this->invokableClasses[''] = 'Leftbrained\\Validator\\';
     }
 }
