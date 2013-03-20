@@ -34,6 +34,12 @@ abstract class AbstractProperty implements PropertyInterface
 
     /**
      * 
+     * @var mixed[mixed]
+     */
+    protected $aliases;
+
+    /**
+     * 
      * @var ValidatorInterface
      */
     protected $validator;
@@ -47,6 +53,7 @@ abstract class AbstractProperty implements PropertyInterface
     {
         $this->name = $options->getName();
         $this->required = $options->getRequired();
+        $this->aliases = $options->getAliases();
         $this->defaultValue = $this->castInternal($options->getDefaultValue());
 
         $validators = $options->getValidators();
@@ -61,7 +68,7 @@ abstract class AbstractProperty implements PropertyInterface
             default: // count($validators) > 1
                 $this->validator = new ValidatorChain();
                 foreach ($validators as $validator) {
-                    $this->validator->addValidator($validator);
+                    $this->validator->attach($validator);
                 }
                 break;
         }

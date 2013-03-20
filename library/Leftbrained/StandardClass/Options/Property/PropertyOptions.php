@@ -33,6 +33,12 @@ class PropertyOptions extends AbstractOptions
 
     /**
      * 
+     * @var mixed[mixed]
+     */
+    protected $aliases;
+
+    /**
+     * 
      * @var ValidatorInterface[]
      */
     protected $validators = array();
@@ -73,6 +79,21 @@ class PropertyOptions extends AbstractOptions
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    public function getAliases()
+    {
+        return $this->aliases;
+    }
+
+    public function setAliases($aliases)
+    {
+        if (!is_array($aliases)) {
+            throw new Exception\InvalidArgumentException('aliases must be an array');
+        }
+
+        $this->aliases = $aliases;
+        return $this;
     }
 
     public function setValidators($validators)

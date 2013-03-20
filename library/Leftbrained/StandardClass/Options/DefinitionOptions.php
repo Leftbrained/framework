@@ -5,6 +5,7 @@ use Leftbrained\Stdlib\AbstractOptions;
 use Leftbrained\StandardClass\Exception;
 use Leftbrained\StandardClass\Options\Property\AbstractPropertyOptions;
 use Leftbrained\StandardClass\Definition;
+use Leftbrained\Validator;
 
 class DefinitionOptions extends AbstractOptions
 {
@@ -93,13 +94,19 @@ class DefinitionOptions extends AbstractOptions
                 throw new Exception\InvalidArgumentException('validator key must be the validator name');
             }
 
-            $this->validators[] = $pluginManager->get($key, $value);
+            $validator = $pluginManager->get($key, $value);
+            if ($validator instanceof Validator\ValidatorMultiInterface) {
+                $this->validators[] = $validator;
+            } else {
+                throw new Exception\InvalidArgumentException('validator "' . $key . '" must an instance of Leftbrained\\Validator\\ValidatorMultiInterface');
+            }
         }
         return $this;
     }
 
     public function getValidators()
     {
+        return array();
         return $this->validators;
     }
 

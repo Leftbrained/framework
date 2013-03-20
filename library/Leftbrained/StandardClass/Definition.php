@@ -3,7 +3,7 @@ namespace Leftbrained\StandardClass;
 
 use Zend\Validator\ValidatorChain;
 use Zend\Stdlib\ArrayUtils;
-use Leftbrained\StandardClass\Validator\ValidatorPluginManager;
+use Leftbrained\Validator;
 
 class Definition implements DefinitionInterface
 {
@@ -20,7 +20,7 @@ class Definition implements DefinitionInterface
     public static function getValidatorPluginManager()
     {
         if (null === static::$validatorPluginManager) {
-            static::$validatorPluginManager = new ValidatorPluginManager();
+            static::$validatorPluginManager = new Validator\ValidatorPluginManager();
         }
         return static::$validatorPluginManager;
     }
@@ -63,46 +63,26 @@ class Definition implements DefinitionInterface
 
     protected function initializeValidator(array $validators = array())
     {
-        $propertyValidators = array();
-        foreach ($this->properties as $property) {
-            $propertyValidator = $property->getValidator();
-            if (null !== $propertyValidator) {
-                $propertyValidators[] = $propertyValidator;
+        $properties = null;
+        foreach ($this->properties as $name => $property) {
+            $validator = $property->getValidator();
+            if (null !== $validator) {
+                if (null === $properties) {
+                    $properties = new Validator\Individual();
+                }
+                $properties->attach($name, $validator);
             }
         }
 
-        switch (count($propertyValidators)) {
-            case 0:
-                $propertyChain = null;
-                break;
-            case 1:
-                $propertyChain = $propertyValidators[0];
-                break;
-            default: // count($propertyValidators) > 1
-                $propertyChain = new ValidatorChain();
-                foreach ($propertyValidators as $validator) {
-                    $propertyChain->addValidator($validator);
-                }
-                break;
-        }
+        if (empty($validators)) {
+            $this->validator = $properties;
+        } else {
+            $this->validator = new Validator\ValidatorChain();
 
-        if (null !== $propertyChain) {
-            array_unshift($validators, $propertyChain);
-        }
-
-        switch (count($validators)) {
-            case 0:
-                $this->validator = null;
-                break;
-            case 1:
-                $this->validator = $validators[0];
-                break;
-            default: // count($validators) > 1
-                $this->validator = new ValidatorChain();
-                foreach ($validators as $validator) {
-                    $this->validator->addValidator($validator);
-                }
-                break;
+            $this->validator->attach($properties, true);
+            foreach ($validators as $validator) {
+                $this->validator->attach($validator);
+            }
         }
     }
 
@@ -129,12 +109,21 @@ class Definition implements DefinitionInterface
         return $this->validator;
     }
 
-    public function isValid($instance)
+    public function isValid(StandardClass $instance)
     {
         if (null === $this->validator) {
             return true;
         }
 
-        $this->validator->isValid($instance);
+        return $this->validator->isValid($instance->toArray());
+    }
+
+    public function getMessages()
+    {
+        if (null === $this->validator) {
+            return array();
+        }
+
+        return $this->validator->getMessages();
     }
 }
