@@ -40,6 +40,12 @@ abstract class AbstractProperty implements PropertyInterface
 
     /**
      * 
+     * @var mixed[mixed]
+     */
+    protected $valueMap;
+
+    /**
+     * 
      * @var ValidatorInterface
      */
     protected $validator;
@@ -53,8 +59,10 @@ abstract class AbstractProperty implements PropertyInterface
     {
         $this->name = $options->getName();
         $this->required = $options->getRequired();
-        $this->aliases = $options->getAliases();
         $this->defaultValue = $this->castInternal($options->getDefaultValue());
+        $this->restrict = $options->getRestrict();
+        $this->aliases = $options->getAliases();
+        $this->valueMap = $options->getValueMap();
 
         $validators = $options->getValidators();
 
@@ -113,6 +121,21 @@ abstract class AbstractProperty implements PropertyInterface
     {
         if (null === $value) {
             return $value;
+        }
+
+        $isScalar = (is_int($value) || is_string($value));
+
+        if ($isScalar) {
+            while (isset($this->aliases[$value])) {
+                $value = $this->aliases[$value];
+            }
+        }
+
+        if (null !== $this->valueMap) {
+            $key = array_search($value, $this->valueMap);
+            if (false !== $key) {
+                $value = $key;
+            }
         }
 
         $value = $this->castInternal($value);

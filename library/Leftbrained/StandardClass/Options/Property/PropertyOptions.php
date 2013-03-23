@@ -33,9 +33,21 @@ class PropertyOptions extends AbstractOptions
 
     /**
      * 
+     * @var string
+     */
+    protected $restrict = 'none';
+
+    /**
+     * 
      * @var mixed[mixed]
      */
     protected $aliases;
+
+    /**
+     * 
+     * @var mixed[mixed]
+     */
+    protected $valueMap;
 
     /**
      * 
@@ -81,6 +93,25 @@ class PropertyOptions extends AbstractOptions
         return $this->defaultValue;
     }
 
+    public function getRestrict()
+    {
+        return $this->restrict;
+    }
+
+    public function setRestrict($restrict)
+    {
+        switch ($restrict) {
+            case 'none':
+            case 'value_map':
+            case 'aliases':
+                break;
+            default:
+                throw new Exception\InvalidArgumentException('restrict must be a value of "none", "value_map", or "aliases"');
+        }
+        $this->restrict = $restrict;
+        return $this;
+    }
+
     public function getAliases()
     {
         return $this->aliases;
@@ -93,6 +124,27 @@ class PropertyOptions extends AbstractOptions
         }
 
         $this->aliases = $aliases;
+        return $this;
+    }
+
+    public function getValueMap()
+    {
+        return $this->valueMap;
+    }
+
+    public function setValueMap($valueMap)
+    {
+        if (!is_array($valueMap)) {
+            throw new Exception\InvalidArgumentException('value_map must be an array');
+        }
+
+        $inverted = array_flip($valueMap);
+
+        if (count($inverted) != count($valueMap)) {
+            throw new Exception\InvalidArgumentException('value_map must not have duplicate values');
+        }
+
+        $this->valueMap = $valueMap;
         return $this;
     }
 
