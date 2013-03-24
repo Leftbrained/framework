@@ -59,7 +59,7 @@ abstract class AbstractProperty implements PropertyInterface
     {
         $this->name = $options->getName();
         $this->required = $options->getRequired();
-        $this->defaultValue = $this->castInternal($options->getDefaultValue());
+        $this->defaultValue = $options->getDefaultValue();
         $this->restrict = $options->getRestrict();
         $this->aliases = $options->getAliases();
         $this->valueMap = $options->getValueMap();
@@ -94,7 +94,7 @@ abstract class AbstractProperty implements PropertyInterface
 
     public function getDefaultValue()
     {
-        return $this->defaultValue;
+        return $this->cast($this->defaultValue, self::CAST_TYPE_INTERNAL);
     }
 
     public function getValidator()

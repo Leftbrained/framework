@@ -3,16 +3,16 @@ namespace Leftbrained\Validator;
 
 use Zend\Validator\ValidatorInterface;
 
-class KeysValues extends AbstractValidatorMulti
+class KeyValues extends AbstractValidatorMulti
 {
-    protected $keysValues = array();
+    protected $keyValues = array();
 
     public function attach($name, ValidatorInterface $validator)
     {
-        if (!isset($this->keysValues[$name])) {
-            $this->keysValues[$name] = array();
+        if (!isset($this->keyValues[$name])) {
+            $this->keyValues[$name] = array();
         }
-        $this->keysValues[$name][] = $validator;
+        $this->keyValues[$name][] = $validator;
         return $this;
     }
 
@@ -21,7 +21,7 @@ class KeysValues extends AbstractValidatorMulti
         $this->setValue($values);
         $result = true;
         $messages = array();
-        foreach ($this->keysValues as $name => $validators) {
+        foreach ($this->keyValues as $name => $validators) {
             if (!isset($values[$name])) {
                 continue;
             }

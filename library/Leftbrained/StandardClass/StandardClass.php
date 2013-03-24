@@ -7,10 +7,11 @@ class StandardClass
 
     /**
      * 
-     * @var Definition
+     * @var Definition[class]
      */
-    protected static $definition;
+    protected static $defaultDefinitions = array();
 
+    protected $definition;
     protected $data = array();
 
     public static function fromArray(array $array)
@@ -21,16 +22,25 @@ class StandardClass
     /**
      * @return Definition
      */
-    public static function getDefinition()
+    public static function getDefaultDefinition()
     {
-        if (null === static::$definition) {
-            static::$definition = new Definition(static::$definitionOptions);
+        $class = get_called_class();
+
+        if (!isset(self::$defaultDefinitions[$class])) {
+            self::$defaultDefinitions[$class] = static::initializeDefinition();
         }
-        return static::$definition;
+
+        return self::$defaultDefinitions[$class];
+    }
+
+    public static function initializeDefinition()
+    {
+        return new Definition(static::$definitionOptions);
     }
 
     public function __construct(array $array = null)
     {
+        $this->definition = static::getDefaultDefinition();
         $this->initializeProperties();
 
         if (null !== $array) {
@@ -40,12 +50,12 @@ class StandardClass
 
     protected function initializeProperties()
     {
-        $this->data = static::getDefinition()->getDefaultPropertyValues();
+        $this->data = $this->definition->getDefaultPropertyValues();
     }
 
     public function get($name)
     {
-        $property = static::$definition->getProperty($name);
+        $property = $this->definition->getProperty($name);
 
         if (null === $property) {
             throw new Exception\InvalidArgumentException('Property "' . $name . '" is not defined');
@@ -56,7 +66,7 @@ class StandardClass
 
     public function set($name, $value)
     {
-        $property = static::$definition->getProperty($name);
+        $property = $this->definition->getProperty($name);
 
         if (null === $property) {
             throw new Exception\InvalidArgumentException('Property "' . $name . '" is not defined');
