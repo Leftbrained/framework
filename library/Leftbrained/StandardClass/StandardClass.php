@@ -104,4 +104,16 @@ class StandardClass
             $this->set($name, $value);
         }
     }
+
+    public function validate()
+    {
+        if (!$this->definition->isValid($this)) {
+            $messages = $this->definition->getMessages();
+            $message = 'Invalid properties: ' . implode(array_keys($messages));
+            $exception = new Exception\InvalidPropertiesException($message);
+            $exception->setMessages($messages);
+
+            throw $exception;
+        }
+    }
 }
