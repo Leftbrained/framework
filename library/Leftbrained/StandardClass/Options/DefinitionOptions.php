@@ -28,7 +28,6 @@ class DefinitionOptions extends AbstractOptions
      * @var AbstractPropertyOptions[]
      */
     protected $properties = array();
-    protected $validators = array();
 
 //     /**
 //      * Whether or not adding undefined properties will be allowed.
@@ -77,37 +76,6 @@ class DefinitionOptions extends AbstractOptions
     {
         $this->class = $class;
         return $this;
-    }
-
-    public function setValidators($validators)
-    {
-        if (!is_array($validators)) {
-            throw new Exception\InvalidArgumentException('validators must be an array');
-        }
-
-        $this->validators = array();
-
-        $pluginManager = Definition::getValidatorPluginManager();
-
-        foreach ($validators as $key => $value) {
-            if (!is_string($key)) {
-                throw new Exception\InvalidArgumentException('validator key must be the validator name');
-            }
-
-            $validator = $pluginManager->get($key, $value);
-            if ($validator instanceof Validator\ValidatorMultiInterface) {
-                $this->validators[] = $validator;
-            } else {
-                throw new Exception\InvalidArgumentException('validator "' . $key . '" must an instance of Leftbrained\\Validator\\ValidatorMultiInterface');
-            }
-        }
-        return $this;
-    }
-
-    public function getValidators()
-    {
-        return array();
-        return $this->validators;
     }
 
 //     public function getAllowCustomProperties()

@@ -1,9 +1,8 @@
 <?php
 namespace Leftbrained\StandardClass;
 
-use Zend\Validator\ValidatorChain;
 use Zend\Stdlib\ArrayUtils;
-use Leftbrained\Validator;
+use Zend\Validator\ValidatorPluginManager;
 
 class Definition implements DefinitionInterface
 {
@@ -15,12 +14,12 @@ class Definition implements DefinitionInterface
      */
     protected $properties = array();
     protected $defaultPropertyValues = array();
-    protected $validator;
+    protected $messages = array();
 
     public static function getValidatorPluginManager()
     {
         if (null === static::$validatorPluginManager) {
-            static::$validatorPluginManager = new Validator\ValidatorPluginManager();
+            static::$validatorPluginManager = new ValidatorPluginManager();
         }
         return static::$validatorPluginManager;
     }
@@ -48,7 +47,6 @@ class Definition implements DefinitionInterface
     protected function initialize(Options\DefinitionOptions $options)
     {
         $this->initializeProperties($options->getProperties());
-        $this->initializeValidator($options->getValidators());
     }
 
     protected function initializeProperties(array $properties)
@@ -58,31 +56,6 @@ class Definition implements DefinitionInterface
             $property = new $class($options);
             $this->properties[$property->getName()] = $property;
             $this->defaultPropertyValues[$property->getName()] = $property->getDefaultValue();
-        }
-    }
-
-    protected function initializeValidator(array $validators = array())
-    {
-        $properties = null;
-        foreach ($this->properties as $name => $property) {
-            $validator = $property->getValidator();
-            if (null !== $validator) {
-                if (null === $properties) {
-                    $properties = new Validator\KeyValues();
-                }
-                $properties->attach($name, $validator);
-            }
-        }
-
-        if (empty($validators)) {
-            $this->validator = $properties;
-        } else {
-            $this->validator = new Validator\ValidatorChain();
-
-            $this->validator->attach($properties, true);
-            foreach ($validators as $validator) {
-                $this->validator->attach($validator);
-            }
         }
     }
 
@@ -104,26 +77,44 @@ class Definition implements DefinitionInterface
         return $this->defaultPropertyValues;
     }
 
-    public function getValidator()
+    public function isValid($values)
     {
-        return $this->validator;
-    }
-
-    public function isValid(StandardClass $instance)
-    {
-        if (null === $this->validator) {
-            return true;
+        if ($values instanceof StandardClass) {
+            $values = $values->toArray();
+        } elseif (!is_array($values)) {
+            throw new \Exception('InvalidArgument');
         }
 
-        return $this->validator->isValid($instance->toArray());
+        $result = true;
+        $messages = array();
+        foreach ($this->properties as $name => $property) {
+            if (!isset($values[$name])) {
+                if ($property->isRequired()) {
+                    $result = false;
+                    $messages[$name] = array(
+                        'required' => 'Value is required',
+                    );
+                }
+                continue;
+            }
+            $validator = $property->getValidator();
+            if (null !== $validator && !$validator->isValid($values[$name])) {
+                $result = false;
+                $messages[$name] = array();
+                foreach ($validator->getMessages() as $key => $message) {
+                    $key = preg_replace(array('/([A-Z]+)([A-Z][a-z])/','/([a-z\d])([A-Z])/'), '$1_$2', $key);
+                    $key = strtolower($key);
+                    $messages[$name][$key] = $message;
+                }
+            }
+        }
+
+        $this->messages = $messages;
+        return $result;
     }
 
     public function getMessages()
     {
-        if (null === $this->validator) {
-            return array();
-        }
-
-        return $this->validator->getMessages();
+        return $this->messages;
     }
 }

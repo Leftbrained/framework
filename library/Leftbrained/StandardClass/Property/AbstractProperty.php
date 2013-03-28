@@ -87,7 +87,7 @@ abstract class AbstractProperty implements PropertyInterface
         return $this->name;
     }
 
-    public function getRequired()
+    public function isRequired()
     {
         return $this->required;
     }
