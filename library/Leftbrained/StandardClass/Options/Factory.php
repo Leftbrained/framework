@@ -11,6 +11,7 @@ class Factory
         'integer'          => 'Leftbrained\\StandardClass\\Options\\Property\\IntegerOptions',
         'character_string' => 'Leftbrained\\StandardClass\\Options\\Property\\CharacterStringOptions',
         'timestamp'        => 'Leftbrained\\StandardClass\\Options\\Property\\TimestampOptions',
+        'float'            => 'Leftbrained\\StandardClass\\Options\\Property\\FloatOptions',
     );
 
     public function getPropertyClass($type)
