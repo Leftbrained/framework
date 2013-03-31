@@ -13,6 +13,7 @@ class Definition implements DefinitionInterface
      * @var PropertyInterface[]
      */
     protected $properties = array();
+    protected $defaultInstanceOptions;
     protected $defaultPropertyValues = array();
     protected $messages = array();
     protected $readOnly;
@@ -59,6 +60,28 @@ class Definition implements DefinitionInterface
             $this->properties[$property->getName()] = $property;
             $this->defaultPropertyValues[$property->getName()] = $property->getDefaultValue();
         }
+    }
+
+    public function getInstanceOptions($options = null)
+    {
+        if (null === $options) {
+            if (null === $this->defaultInstanceOptions) {
+                $this->defaultInstanceOptions = new Options\InstanceOptions;
+            }
+            return $this->defaultInstanceOptions;
+        }
+
+        if (!$options instanceof Options\InstanceOptions) {
+            if ($options instanceof Traversable) {
+                $options = ArrayUtils::iteratorToArray($options);
+            }
+            if (!is_array($options)) {
+                throw new Exception\InvalidArgumentException('invalid instance options, must be instanceof Traversible, InstanceOptions, or array');
+            }
+            $options = new Options\InstanceOptions($options);
+        }
+
+        return $options;
     }
 
     public function getProperties()

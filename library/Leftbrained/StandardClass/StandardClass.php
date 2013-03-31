@@ -19,13 +19,20 @@ class StandardClass
 
     /**
      * 
+     * @var boolean
+     */
+    protected $_readOnly;
+
+    /**
+     * 
      * 
      * @var mixed[string]
      */
     protected $_data = array();
 
     /**
-     * 
+     * Whether or not to check the read only status on set
+     *
      * @var boolean
      */
     protected $_verifyReadOnly = false;
@@ -54,10 +61,10 @@ class StandardClass
         return new Definition(static::$definitionOptions);
     }
 
-    public function __construct(array $array = null)
+    public function __construct(array $array = null, $options = null)
     {
         $this->_definition = static::getDefaultDefinition();
-        $this->initializeProperties();
+        $this->_initialize($options);
 
         if (null !== $array) {
             $this->loadArray($array);
@@ -65,7 +72,14 @@ class StandardClass
         $this->_verifyReadOnly = true;
     }
 
-    protected function initializeProperties()
+    protected function _initialize($options = null)
+    {
+        $options = $this->_definition->getInstanceOptions($options);
+        $this->_readOnly = $options->getReadOnly();
+        $this->_initializeProperties();
+    }
+
+    protected function _initializeProperties()
     {
         $this->_data = $this->_definition->getDefaultPropertyValues();
     }
@@ -90,6 +104,9 @@ class StandardClass
         }
 
         if ($this->_verifyReadOnly) {
+            if ($this->_readOnly) {
+                throw new Exception\InvalidArgumentException('This instance of class "' . get_class($this) . '" is read only');
+            }
             if ($this->_definition->isReadOnly()) {
                 throw new Exception\InvalidArgumentException('Class "' . get_class($this) . '" is read only');
             }
