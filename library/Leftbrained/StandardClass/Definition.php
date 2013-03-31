@@ -15,6 +15,7 @@ class Definition implements DefinitionInterface
     protected $properties = array();
     protected $defaultPropertyValues = array();
     protected $messages = array();
+    protected $readOnly;
 
     public static function getValidatorPluginManager()
     {
@@ -46,6 +47,7 @@ class Definition implements DefinitionInterface
 
     protected function initialize(Options\DefinitionOptions $options)
     {
+        $this->readOnly = $options->getReadOnly();
         $this->initializeProperties($options->getProperties());
     }
 
@@ -75,6 +77,11 @@ class Definition implements DefinitionInterface
     public function getDefaultPropertyValues()
     {
         return $this->defaultPropertyValues;
+    }
+
+    public function isReadOnly()
+    {
+        return $this->readOnly;
     }
 
     public function isValid($values)

@@ -29,6 +29,12 @@ class DefinitionOptions extends AbstractOptions
      */
     protected $properties = array();
 
+    /**
+     * 
+     * @var boolean
+     */
+    protected $readOnly = false;
+
 //     /**
 //      * Whether or not adding undefined properties will be allowed.
 //      *
@@ -75,6 +81,17 @@ class DefinitionOptions extends AbstractOptions
     public function setClass($class)
     {
         $this->class = $class;
+        return $this;
+    }
+
+    public function getReadOnly()
+    {
+        return $this->readOnly;
+    }
+
+    public function setReadOnly($readOnly)
+    {
+        $this->readOnly = (boolean)$readOnly;
         return $this;
     }
 

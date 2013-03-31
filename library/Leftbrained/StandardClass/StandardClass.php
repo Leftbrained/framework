@@ -11,8 +11,24 @@ class StandardClass
      */
     protected static $defaultDefinitions = array();
 
-    protected $definition;
-    protected $data = array();
+    /**
+     * 
+     * @var Definition
+     */
+    protected $_definition;
+
+    /**
+     * 
+     * 
+     * @var mixed[string]
+     */
+    protected $_data = array();
+
+    /**
+     * 
+     * @var boolean
+     */
+    protected $_verifyReadOnly = false;
 
     public static function fromArray(array $array)
     {
@@ -40,39 +56,46 @@ class StandardClass
 
     public function __construct(array $array = null)
     {
-        $this->definition = static::getDefaultDefinition();
+        $this->_definition = static::getDefaultDefinition();
         $this->initializeProperties();
 
         if (null !== $array) {
             $this->loadArray($array);
         }
+        $this->_verifyReadOnly = true;
     }
 
     protected function initializeProperties()
     {
-        $this->data = $this->definition->getDefaultPropertyValues();
+        $this->_data = $this->_definition->getDefaultPropertyValues();
     }
 
     public function get($name)
     {
-        $property = $this->definition->getProperty($name);
+        $property = $this->_definition->getProperty($name);
 
         if (null === $property) {
             throw new Exception\InvalidArgumentException('Property "' . $name . '" is not defined');
         }
 
-        return $this->data[$name];
+        return $this->_data[$name];
     }
 
     public function set($name, $value)
     {
-        $property = $this->definition->getProperty($name);
+        $property = $this->_definition->getProperty($name);
 
         if (null === $property) {
             throw new Exception\InvalidArgumentException('Property "' . $name . '" is not defined');
         }
 
-        $this->data[$name] = $property->cast($value);
+        if ($this->_verifyReadOnly) {
+            if ($this->_definition->isReadOnly()) {
+                throw new Exception\InvalidArgumentException('Class "' . get_class($this) . '" is read only');
+            }
+        }
+
+        $this->_data[$name] = $property->cast($value);
 
         return $this;
     }
@@ -95,7 +118,7 @@ class StandardClass
 
     public function toArray()
     {
-        return $this->data;
+        return $this->_data;
     }
 
     protected function loadArray(array $array)
@@ -107,8 +130,8 @@ class StandardClass
 
     public function validate()
     {
-        if (!$this->definition->isValid($this)) {
-            $messages = $this->definition->getMessages();
+        if (!$this->_definition->isValid($this)) {
+            $messages = $this->_definition->getMessages();
             $message = 'Invalid properties: ' . implode(array_keys($messages));
             $exception = new Exception\InvalidPropertiesException($message);
             $exception->setMessages($messages);
