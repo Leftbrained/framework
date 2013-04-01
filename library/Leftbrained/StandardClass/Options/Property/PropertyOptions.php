@@ -78,7 +78,11 @@ class PropertyOptions extends AbstractOptions
 
     public function setRequired($required)
     {
-        $this->required = (boolean) $required;
+        if (is_callable($required)) {
+            $this->required = $required;
+        } else {
+            $this->required = (boolean) $required;
+        }
         return $this;
     }
 

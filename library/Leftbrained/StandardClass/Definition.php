@@ -118,15 +118,28 @@ class Definition implements DefinitionInterface
         $result = true;
         $messages = array();
         foreach ($this->properties as $name => $property) {
+            // Determine if property is required
             if (!isset($values[$name])) {
-                if ($property->isRequired()) {
+                $required = $property->isRequired();
+                $message = 'Value is required';
+                if (is_callable($required)) {
+                    $required = $required($values);
+                    if (is_string($required)) {
+                        $message = $required;
+                        $required = true;
+                    } else {
+                        $required = (boolean) $required;
+                    }
+                }
+                if ($required) {
                     $result = false;
                     $messages[$name] = array(
-                        'required' => 'Value is required',
+                        'required' => $message,
                     );
                 }
                 continue;
             }
+
             $validator = $property->getValidator();
             if (null !== $validator && !$validator->isValid($values[$name])) {
                 $result = false;
