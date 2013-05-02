@@ -3,8 +3,8 @@
     "description": "A mish-mash of re-usable classes and functionality.",
     "license": "BSD-3-Clause",
     "require": {
-        "zendframework/zend-stdlib": "2.1.*",
-        "zendframework/zend-validator": "2.1.*",
+        "zendframework/zend-stdlib": "~2.1.5",
+        "zendframework/zend-validator": "~2.1.5",
         "php": ">=5.3.3"
     },
     "autoload": {
