@@ -10,6 +10,7 @@ class Factory
         'mixed'            => 'Leftbrained\\StandardClass\\Options\\Property\\MixedOptions',
         'integer'          => 'Leftbrained\\StandardClass\\Options\\Property\\IntegerOptions',
         'character_string' => 'Leftbrained\\StandardClass\\Options\\Property\\CharacterStringOptions',
+        'date'             => 'Leftbrained\\StandardClass\\Options\\Property\\DateOptions',
         'timestamp'        => 'Leftbrained\\StandardClass\\Options\\Property\\TimestampOptions',
         'float'            => 'Leftbrained\\StandardClass\\Options\\Property\\FloatOptions',
     );
