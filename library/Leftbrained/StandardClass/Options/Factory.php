@@ -13,6 +13,7 @@ class Factory
         'date'             => 'Leftbrained\\StandardClass\\Options\\Property\\DateOptions',
         'timestamp'        => 'Leftbrained\\StandardClass\\Options\\Property\\TimestampOptions',
         'float'            => 'Leftbrained\\StandardClass\\Options\\Property\\FloatOptions',
+        'boolean'          => 'Leftbrained\\StandardClass\\Options\\Property\\BooleanOptions',
     );
 
     public function getPropertyClass($type)
