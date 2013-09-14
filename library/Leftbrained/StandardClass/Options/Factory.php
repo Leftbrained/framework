@@ -3,6 +3,7 @@ namespace Leftbrained\StandardClass\Options;
 
 use Leftbrained\StandardClass\Exception;
 use Zend\Stdlib\ArrayUtils;
+use Traversable;
 
 class Factory
 {
