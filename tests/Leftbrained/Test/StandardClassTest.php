@@ -13,4 +13,13 @@ class StandardClassTest extends PHPUnit_Framework_TestCase
     {
         $instance = new StandardClass();
     }
+
+    /**
+     * @test
+     */
+    public function mustSetPropertyWithSetNameValue()
+    {
+        $instance = new StandardClass();
+        $instance->set('my_name', 'VALUE');
+    }
 }
