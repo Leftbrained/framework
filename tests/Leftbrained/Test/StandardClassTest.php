@@ -9,8 +9,8 @@ class StandardClassTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function classStandardClassMustExist()
+    public function mustExist()
     {
-        $obj = new StandardClass();
+        $instance = new StandardClass();
     }
 }
