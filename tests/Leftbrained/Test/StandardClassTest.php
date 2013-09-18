@@ -22,4 +22,15 @@ class StandardClassTest extends PHPUnit_Framework_TestCase
         $instance = new StandardClass();
         $instance->set('my_name', 'VALUE');
     }
+
+    /**
+     * @test
+     */
+    public function mustSetThenGetSameStringWithMethods()
+    {
+        $instance = new StandardClass();
+        $instance->set('my_name', 'm\'y %te%st! S(t"ri"n)g?');
+
+        static::assertEquals('m\'y %te%st! S(t"ri"n)g?', $instance->get('my_name'));
+    }
 }
