@@ -1,5 +1,5 @@
 <?php
-namespace Leftbrained\Test;
+namespace Leftbrained\Test\StandardClass;
 
 use PHPUnit_Framework_TestCase;
 use Leftbrained\StandardClass\StandardClass;
