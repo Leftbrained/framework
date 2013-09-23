@@ -2,7 +2,6 @@
 namespace Leftbrained\Test\StandardClass\Property;
 
 use PHPUnit_Framework_TestCase;
-use Leftbrained\StandardClass\Property\Mixed as MixedProperty;
 
 class AbstractPropertyTest extends PHPUnit_Framework_TestCase
 {
@@ -11,7 +10,8 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
      */
     public function mustExist()
     {
-        $instance = static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
+        $property = $this->getAbstractProperty();
+        static::assertInstanceOf('Leftbrained\\StandardClass\\Property\\AbstractProperty', $property);
     }
 
     /**
@@ -19,7 +19,12 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
      */
     public function mustSetName()
     {
-        $instance = static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
-        $instance->setName('my_name');
+        $property = $this->getAbstractProperty();
+        $property->setName('my_name');
+    }
+
+    private function getAbstractProperty()
+    {
+        return static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
     }
 }
