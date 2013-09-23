@@ -13,4 +13,13 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
     {
         $instance = static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
     }
+
+    /**
+     * @test
+     */
+    public function mustSetName()
+    {
+        $instance = static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
+        $instance->setName('my_name');
+    }
 }
