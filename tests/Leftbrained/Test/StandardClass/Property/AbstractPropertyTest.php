@@ -12,9 +12,8 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
      */
     public function mustBeAbstract()
     {
-        $className = 'Leftbrained\\StandardClass\\Property\\AbstractProperty';
-        $class = new ReflectionClass($className);
-        static::assertTrue($class->isAbstract(), $className . ' must be abstract');
+        $class = $this->getAbstractPropertyReflection();
+        static::assertTrue($class->isAbstract(), $class->getName() . ' must be abstract');
     }
 
     /**
@@ -34,5 +33,13 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
     private function getAbstractPropertyMock()
     {
         return static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
+    }
+
+    /**
+     * @return ReflectionClass
+     */
+    private function getAbstractPropertyReflection()
+    {
+        return new ReflectionClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
     }
 }
