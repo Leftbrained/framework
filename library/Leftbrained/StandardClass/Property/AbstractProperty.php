@@ -14,4 +14,6 @@ abstract class AbstractProperty
     {
         return $this->name;
     }
+
+    abstract public function toDefault();
 }
