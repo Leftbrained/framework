@@ -23,7 +23,7 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
     public function mustSetAndGetName()
     {
         $name = 'my_name';
-        $property = $this->getAbstractProperty();
+        $property = $this->getAbstractPropertyMock();
         $property->setName($name);
         static::assertEquals($name, $property->getName());
     }
@@ -31,7 +31,7 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
     /**
      * @return AbstractProperty
      */
-    private function getAbstractProperty()
+    private function getAbstractPropertyMock()
     {
         return static::getMockForAbstractClass('Leftbrained\\StandardClass\\Property\\AbstractProperty');
     }
