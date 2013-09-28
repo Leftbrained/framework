@@ -19,11 +19,12 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function mustDefineAbstractMethodToDefault()
+    public function mustDefineAbstractMethodToDefaultThatExceptsOneParameter()
     {
         $class = $this->getAbstractPropertyReflection();
         $method = $class->getMethod('toDefault');
         static::assertTrue($method->isAbstract(), $method->getName() . ' must be abstract');
+        static::assertEquals(1, $method->getNumberOfParameters());
     }
 
     /**
