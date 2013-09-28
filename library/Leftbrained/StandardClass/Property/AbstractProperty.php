@@ -1,7 +1,7 @@
 <?php
 namespace Leftbrained\StandardClass\Property;
 
-class AbstractProperty
+abstract class AbstractProperty
 {
     protected $name;
 

@@ -2,6 +2,7 @@
 namespace Leftbrained\Test\StandardClass\Property;
 
 use PHPUnit_Framework_TestCase;
+use ReflectionClass;
 use Leftbrained\StandardClass\Property\AbstractProperty;
 
 class AbstractPropertyTest extends PHPUnit_Framework_TestCase
@@ -9,10 +10,11 @@ class AbstractPropertyTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function mustExist()
+    public function mustBeAbstract()
     {
-        $property = $this->getAbstractProperty();
-        static::assertInstanceOf('Leftbrained\\StandardClass\\Property\\AbstractProperty', $property);
+        $className = 'Leftbrained\\StandardClass\\Property\\AbstractProperty';
+        $class = new ReflectionClass($className);
+        static::assertTrue($class->isAbstract(), $className . ' must be abstract');
     }
 
     /**
