@@ -13,7 +13,7 @@ class MixedTest extends PHPUnit_Framework_TestCase
      */
     public function mustExist()
     {
-        $instance = new MixedProperty();
+        $instance = $this->getMixedDefaultInstance();
     }
 
     /**
@@ -24,6 +24,32 @@ class MixedTest extends PHPUnit_Framework_TestCase
         $class = $this->getMixedReflection();
         $parent = $class->getParentClass();
         static::assertEquals('Leftbrained\\StandardClass\\Property\\AbstractProperty', $parent ? $parent->getName() : null);
+    }
+
+    /**
+     * @test
+     */
+    public function castDefaultMustNotAlterValue()
+    {
+        $this->assertCast('This IS a string %s value ?');
+        $this->assertCast(-983);
+        $this->assertCast(3.14159);
+        $this->assertCast(array('fred', 12, 'wilma'));
+        $this->assertCast(new \stdClass());
+    }
+
+    private function assertCast($value)
+    {
+        $instance = $this->getMixedDefaultInstance();
+        static::assertEquals($value, $instance->castDefault($value));
+    }
+
+    /**
+     * @return MixedProperty
+     */
+    private function getMixedDefaultInstance()
+    {
+        return new MixedProperty();
     }
 
     /**

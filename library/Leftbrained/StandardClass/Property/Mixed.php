@@ -5,5 +5,6 @@ class Mixed extends AbstractProperty
 {
     public function castDefault($value)
     {
+        return $value;
     }
 }
