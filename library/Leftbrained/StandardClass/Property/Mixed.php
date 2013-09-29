@@ -1,6 +1,9 @@
 <?php
 namespace Leftbrained\StandardClass\Property;
 
-class Mixed
+class Mixed extends AbstractProperty
 {
+    public function castDefault($value)
+    {
+    }
 }
